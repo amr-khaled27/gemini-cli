@@ -39,7 +39,6 @@ async function app() {
 program
 .version('1.0.0')
 .option('-c, --chat <message>', 'Send a prompt instantly to Gemini.')
-.option('-pdf, --pdf <path_or_url> <prompt>', 'Send a pdf file with a prompt')
 .parse(process.argv);
 
 const opts = program.opts();
