@@ -1,12 +1,13 @@
 import readlineSync from 'readline-sync';
-import { formatResponse, getAPIResponse } from './api.js';
-import { showHistory } from './utls.js'
-import { saveChat } from './chats.js';
+import { model, chatSession } from './app.js';
+import { saveChat } from './chats.js'
+import { promptPDF } from './pdf.js';
 
 let chat_log = [];
-let save_log = [];
+let not_saved_yet = [];
 
 async function mainLoop() {
+
   while (true) {
     const userInput = readlineSync.question('You: ');
     const formattedInput = userInput.toLocaleLowerCase().trim();
@@ -14,39 +15,44 @@ async function mainLoop() {
     if (formattedInput === 'exit') {
       console.log('Exiting...');
       break;
+      
     } else if (formattedInput === 'history') {
-      showHistory(chat_log);
-      continue;
-    } else if (formattedInput == 'save') {
-      if (save_log == []) {
-        console.log("Noting to save!");
-        continue;
+      if (chat_log.length > 0) {
+        chat_log.forEach(log => {
+          console.log(log.role, log.content);
+        })
+      } else {
+        console.log("No history to show");
       }
-      saveChat(save_log);
-      save_log = [];
       continue;
+    } else if (formattedInput === 'save') {
+      saveChat(not_saved_yet);
+      not_saved_yet = [];
+      continue;
+    } else if (formattedInput === 'pdf') {
+      const result = await promptPDF();
+      console.log(result);
+      continue
     } else if (formattedInput === 'help') {
       console.log(`
         help     - Displays Help
         history  - Displays Chat History
+        pdf      - Prompt with a pdf
         save     - Saves Chat
         exit     - Exits the Application
       `);
       continue;
     }
-  
-    chat_log.push({'role': 'user', 'content': userInput});
-    save_log.push({'role': 'user', 'content': userInput});
-  
-    const response = await getAPIResponse(chat_log);
-  
-    const text = formatResponse(response);
-  
-    chat_log.push({'role': "assistant", 'content': text});
-    save_log.push({'role': "assistant", 'content': text});
-  
-    console.log("LLaMA: ", text);
+    chat_log.push({role: 'user:', content: userInput})
+    not_saved_yet.push({role: 'user:', content: userInput})
+
+    const result = await chatSession.sendMessage(userInput);
+
+    chat_log.push({role:'assistant:', content: `${result.response.text()}`});
+    not_saved_yet.push({role:'assistant:', content: `${result.response.text()}`})
+
+    console.log(result.response.text());
   }
 }
 
-export {mainLoop};
+export { mainLoop, model, chat_log, not_saved_yet };

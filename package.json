@@ -1,10 +1,10 @@
 {
-  "name": "llama3-cli",
+  "name": "gemini-cli",
   "type": "module",
-  "version": "1.0.5",
+  "version": "1.0.0",
   "main": "./src/app.js",
   "bin": {
-    "llama": "./src/app.js"
+    "gemini": "./src/app.js"
   },
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
@@ -14,9 +14,9 @@
   "license": "ISC",
   "description": "A CLI tool to interact with the LLaMA model",
   "dependencies": {
+    "@google/generative-ai": "^0.21.0",
     "commander": "^12.1.0",
     "dotenv": "^16.4.7",
-    "groq-sdk": "^0.9.1",
     "punycode": "^2.3.1",
     "readline-sync": "^1.4.10"
   }

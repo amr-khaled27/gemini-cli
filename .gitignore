@@ -4,9 +4,15 @@ node_modules/
 # Log files
 *.log
 
+# env
+.env
+
 # Build directories
 build/
 dist/
 
 # macOS system files
 .DS_Store
+
+# Other
+*.pdf
