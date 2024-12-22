@@ -1,6 +1,6 @@
 import { readFileSync } from 'fs';
 import { question } from 'readline-sync';
-import { model, not_saved_yet } from './mainLoop.js';
+import { model } from './mainLoop.js';
 
 function isFile(path_or_url) {
   return path_or_url.split('/').pop().indexOf('.') > -1;
