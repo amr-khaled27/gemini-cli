@@ -1,4 +1,4 @@
-import readlineSync from 'readline-sync';
+import readlineSync, { question } from 'readline-sync';
 import { model, chatSession } from './app.js';
 import { saveChat } from './chats.js'
 
@@ -6,8 +6,11 @@ let chat_log = [];
 let not_saved_yet = [];
 
 async function mainLoop() {
+
+  let pdf = undefined;
+
   while (true) {
-    const userInput = readlineSync.question('You: ');
+    let userInput = readlineSync.question('You: ');
     const formattedInput = userInput.toLocaleLowerCase().trim();
   
     if (formattedInput === 'exit') {
@@ -28,8 +31,9 @@ async function mainLoop() {
       not_saved_yet = [];
       continue;
     } else if (formattedInput === 'pdf') {
-      console.log('Work in progress');
-      continue;
+      pdf = await fetch('https://discovery.ucl.ac.uk/id/eprint/10089234/1/343019_3_art_0_py4t4l_convrt.pdf')
+        .then((response) => response.arrayBuffer());
+      userInput = readlineSync.question('Prompt: ');
     } else if (formattedInput === 'help') {
       console.log(`
         help     - Displays Help
@@ -40,10 +44,24 @@ async function mainLoop() {
       `);
       continue;
     }
-    chat_log.push({role: 'user:', content: userInput})
-    not_saved_yet.push({role: 'user:', content: userInput})
+    chat_log.push({role: 'user:', content: userInput});
+    not_saved_yet.push({role: 'user:', content: userInput});
 
-    const result = await chatSession.sendMessage(userInput);
+    let result;
+
+    if (pdf == undefined) {
+      result = await chatSession.sendMessage(userInput);
+    } else {
+      result = await model.generateContent([
+        {
+            inlineData: {
+                data: Buffer.from(pdf).toString("base64"),
+                mimeType: "application/pdf",
+            },
+        },
+        userInput,
+      ]);
+    }
 
     chat_log.push({role:'assistant:', content: `${result.response.text()}`});
     not_saved_yet.push({role:'assistant:', content: `${result.response.text()}`})
