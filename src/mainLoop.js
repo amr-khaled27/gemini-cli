@@ -1,7 +1,6 @@
 import readlineSync from 'readline-sync';
 import { model, chatSession } from './app.js';
 import { saveChat } from './chats.js'
-import { promptPDF } from './pdf.js';
 
 let chat_log = [];
 let not_saved_yet = [];
@@ -30,9 +29,7 @@ async function mainLoop() {
       not_saved_yet = [];
       continue;
     } else if (formattedInput === 'pdf') {
-      const result = await promptPDF();
-      console.log(result);
-      continue
+      console.log('Work in progress');
     } else if (formattedInput === 'help') {
       console.log(`
         help     - Displays Help
