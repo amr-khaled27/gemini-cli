@@ -6,7 +6,6 @@ let chat_log = [];
 let not_saved_yet = [];
 
 async function mainLoop() {
-
   while (true) {
     const userInput = readlineSync.question('You: ');
     const formattedInput = userInput.toLocaleLowerCase().trim();
@@ -30,6 +29,7 @@ async function mainLoop() {
       continue;
     } else if (formattedInput === 'pdf') {
       console.log('Work in progress');
+      continue;
     } else if (formattedInput === 'help') {
       console.log(`
         help     - Displays Help
@@ -52,4 +52,4 @@ async function mainLoop() {
   }
 }
 
-export { mainLoop, model, chat_log, not_saved_yet };
+export { mainLoop };
