@@ -1,7 +1,5 @@
 #!/usr/bin/env node
 
-process.removeAllListeners('warning');
-
 import { GoogleGenerativeAI } from '@google/generative-ai';
 import { mainLoop } from './mainLoop.js';
 import { program } from 'commander';
@@ -34,7 +32,6 @@ const chatSession = model.startChat({
 async function app() {
   mainLoop();
 }
-
 
 program
 .version('1.0.0')
