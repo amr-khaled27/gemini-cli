@@ -57,14 +57,14 @@ async function app() {
 
 program
 .version('1.0.5')
-.option('-c, --chat <message>', 'Send a prompt instantly to Gemini.')
+.option('-m, --send <message>', 'Send a prompt instantly to Gemini.')
 .parse(process.argv);
 
 const opts = program.opts();
 
 if (opts.chat) {
   const result = await chatSession.sendMessage(opts.chat);
-  console.log(result.response.text());
+  console.log(cliMd(result.response.text()));
   process.exit(0);
 }
 
