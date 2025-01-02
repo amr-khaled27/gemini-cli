@@ -4,10 +4,32 @@ import { GoogleGenerativeAI } from '@google/generative-ai';
 import { mainLoop } from './mainLoop.js';
 import { program } from 'commander';
 import dotenv from 'dotenv';
+import cliMd from 'cli-markdown';
 
 dotenv.config();
 
 const apiKey = process.env.GEMINI_API_KEY;
+
+if (!apiKey) {
+  console.error(cliMd(`
+  **Please set GEMINI_API_KEY in your environment variables.**
+  You can get your API key from
+  > https://console.cloud.google.com/apis/credentials
+
+  Setting the GEMINI_API_KEY:
+
+  **Linux/Mac:**
+  > export GEMINI_API_KEY=your_api_key_here
+
+  **Windows (Command Prompt):**
+  > set GEMINI_API_KEY=your_api_key_here
+
+  **Windows (PowerShell):**
+  > $env:GEMINI_API_KEY="your_api_key_here"
+  `));
+  process.exit(1);
+}
+
 const genAI = new GoogleGenerativeAI(apiKey);
 
 const model = genAI.getGenerativeModel({
