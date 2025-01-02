@@ -12,7 +12,7 @@
   "keywords": [],
   "author": "",
   "license": "ISC",
-  "description": "A CLI tool to interact with the LLaMA model",
+  "description": "A CLI tool to interact with the Gemini model",
   "dependencies": {
     "@google/generative-ai": "^0.21.0",
     "cli-markdown": "^3.4.0",
