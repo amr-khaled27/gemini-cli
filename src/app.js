@@ -56,8 +56,10 @@ async function app() {
 }
 
 program
-.version('1.0.5')
+.version('1.0.6')
+.description('Chat with Gemini from the comfort of your terminal!')
 .option('-m, --send <message>', 'Send a prompt instantly to Gemini.')
+.option('<no options>', 'Enter chat mode with gemini.')
 .parse(process.argv);
 
 const opts = program.opts();
