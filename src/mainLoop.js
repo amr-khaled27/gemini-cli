@@ -2,6 +2,7 @@ import { question } from 'readline-sync';
 import { chatSession } from './app.js';
 import { saveChat } from './chats.js';
 import { pdf } from './pdf.js';
+import cliMd from 'cli-markdown';
 
 let chat_log = [];
 let not_saved_yet = [];
@@ -56,9 +57,9 @@ async function mainLoop() {
     const result = await chatSession.sendMessage(prompt);
 
     chat_log.push({role:'assistant:', content: `${result.response.text()}`});
-    not_saved_yet.push({role:'assistant:', content: `${result.response.text()}`})
+    not_saved_yet.push({role:'assistant:', content: `${result.response.text()}`});
 
-    console.log(result.response.text());
+    console.log(cliMd(result.response.text()));
   }
 }
 

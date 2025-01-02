@@ -34,7 +34,7 @@ async function app() {
 }
 
 program
-.version('1.0.0')
+.version('1.0.5')
 .option('-c, --chat <message>', 'Send a prompt instantly to Gemini.')
 .parse(process.argv);
 
