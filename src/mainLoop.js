@@ -1,22 +1,22 @@
-import readlineSync, { question } from 'readline-sync';
-import { model, chatSession } from './app.js';
-import { saveChat } from './chats.js'
+import { question } from 'readline-sync';
+import { chatSession } from './app.js';
+import { saveChat } from './chats.js';
+import { pdf } from './pdf.js';
 
 let chat_log = [];
 let not_saved_yet = [];
+let prepend = "";
 
 async function mainLoop() {
 
-  let pdf = undefined;
-
   while (true) {
-    let userInput = readlineSync.question('You: ');
+    const userInput = question('You: ');
+    const prompt = prepend + '\n' + userInput;
     const formattedInput = userInput.toLocaleLowerCase().trim();
   
     if (formattedInput === 'exit') {
-      console.log('Exiting...');
+      console.log('Bye!');
       break;
-      
     } else if (formattedInput === 'history') {
       if (chat_log.length > 0) {
         chat_log.forEach(log => {
@@ -30,38 +30,30 @@ async function mainLoop() {
       saveChat(not_saved_yet);
       not_saved_yet = [];
       continue;
-    } else if (formattedInput === 'pdf') {
-      pdf = await fetch('https://discovery.ucl.ac.uk/id/eprint/10089234/1/343019_3_art_0_py4t4l_convrt.pdf')
-        .then((response) => response.arrayBuffer());
-      userInput = readlineSync.question('Prompt: ');
+    } else if (formattedInput === 'loadpdf') {
+      prepend = await pdf();
+      console.log("log from after load!");
+      continue;
+    } else if (formattedInput === 'unload') {
+      prepend = "";
+      console.log("PDF unloaded!");
+      continue;
     } else if (formattedInput === 'help') {
       console.log(`
-        help     - Displays Help
-        history  - Displays Chat History
-        pdf      - Prompt with a pdf
-        save     - Saves Chat
-        exit     - Exits the Application
+        help     - Displays help
+        history  - Displays chat history
+        loadpdf  - Load a PDF and chat about it
+        unload   - Unload the PDF
+        save     - Saves chat in json format
+        exit     - Exits the application
       `);
       continue;
     }
-    chat_log.push({role: 'user:', content: userInput});
-    not_saved_yet.push({role: 'user:', content: userInput});
+    chat_log.push({role: 'user:', content: prompt});
+    not_saved_yet.push({role: 'user:', content: prompt});
 
-    let result;
 
-    if (pdf == undefined) {
-      result = await chatSession.sendMessage(userInput);
-    } else {
-      result = await model.generateContent([
-        {
-            inlineData: {
-                data: Buffer.from(pdf).toString("base64"),
-                mimeType: "application/pdf",
-            },
-        },
-        userInput,
-      ]);
-    }
+    const result = await chatSession.sendMessage(prompt);
 
     chat_log.push({role:'assistant:', content: `${result.response.text()}`});
     not_saved_yet.push({role:'assistant:', content: `${result.response.text()}`})
