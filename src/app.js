@@ -56,7 +56,7 @@ async function app() {
 }
 
 program
-.version('0.0.7')
+.version('0.0.7-alpha')
 .description('Chat with Gemini from the comfort of your terminal!')
 .option('-m, --message <prompt>', 'Send a prompt instantly to Gemini.')
 .option('<no options>', 'Enter chat mode with gemini.')
