@@ -1,7 +1,7 @@
 {
   "name": "gemini-cli",
   "type": "module",
-  "version": "1.0.6",
+  "version": "0.0.7",
   "main": "./src/app.js",
   "bin": {
     "gemini": "./src/app.js"
