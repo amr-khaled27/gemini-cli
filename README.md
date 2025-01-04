@@ -4,6 +4,7 @@
 
 ## Features
 - Interact with Gemini via the terminal.
+- Provide a PDF file or a URL and start chatting about its details.
 - Lightweight and easy to use.
 
 ## Installation
