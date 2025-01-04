@@ -10,7 +10,7 @@
 
 To install Gemini CLI, follow these steps:
 
-1. Clone the package (npm release coming soon, the tool is open for testing).
+1. Clone the package (npm release coming soon; the tool is currently open for testing).
    
       ```bash
       git clone https://github.com/amr-khaled27/gemini-cli.git
