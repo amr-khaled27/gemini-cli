@@ -6,14 +6,13 @@ import cliMd from 'cli-markdown';
 
 let chat_log = [];
 let not_saved_yet = [];
-let prepend = "";
 
 async function mainLoop() {
 
   while (true) {
-    const userInput = question('You: ');
-    const prompt = prepend + '\n' + userInput;
-    const formattedInput = userInput.toLocaleLowerCase().trim();
+    let userInput = question('You: ');
+    const formattedInput = userInput.trim();
+    let prompt = userInput;
   
     if (formattedInput === 'exit') {
       console.log('Bye!');
@@ -32,13 +31,10 @@ async function mainLoop() {
       not_saved_yet = [];
       continue;
     } else if (formattedInput === 'loadpdf') {
-      prepend = await pdf();
+      const sumamry = await pdf();
       console.log("log from after load!");
-      continue;
-    } else if (formattedInput === 'unload') {
-      prepend = "";
-      console.log("PDF unloaded!");
-      continue;
+      userInput = question('You: ');
+      prompt = sumamry + '\n' + userInput;
     } else if (formattedInput === 'help') {
       console.log(`
         help     - Displays help
@@ -52,7 +48,6 @@ async function mainLoop() {
     }
     chat_log.push({role: 'user:', content: prompt});
     not_saved_yet.push({role: 'user:', content: prompt});
-
 
     const result = await chatSession.sendMessage(prompt);
 
