@@ -30,7 +30,7 @@ To install Gemini CLI, follow these steps:
 
 4. Set up the variable $GEMINI_API_KEY. You can get your key from Google AI Studio.
 
-5. Type gemini to start chatting!
+5. Type gemini in your terminal to start chatting!
 
      ```bash
      gemini
