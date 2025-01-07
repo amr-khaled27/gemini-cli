@@ -22,7 +22,7 @@ To install Gemini CLI, follow these steps:
      ```bash
      cd gemini-cli
      ```
-3. install the package globally
+3. install the package globally (npm release coming soon)
 
      ```bash
      npm i -g .
