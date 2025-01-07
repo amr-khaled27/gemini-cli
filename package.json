@@ -15,7 +15,9 @@
   "description": "A CLI tool to interact with the Gemini model",
   "dependencies": {
     "@google/generative-ai": "^0.21.0",
+    "cli-loading-animation": "^1.0.6",
     "cli-markdown": "^3.4.0",
+    "cli-spinners": "^3.2.0",
     "commander": "^12.1.0",
     "dotenv": "^16.4.7",
     "punycode": "^2.3.1",
