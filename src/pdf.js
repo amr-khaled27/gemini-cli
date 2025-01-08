@@ -1,17 +1,28 @@
 import fs from 'fs'
-import { question } from 'readline-sync';
+import inquirer from 'inquirer';
 import { model } from './app.js';
 
 async function pdf() {
-  const url_or_path = question("Enter a path or url: ");
+  let prompt;
+  try {
+    prompt = await inquirer.prompt([
+    {
+      type: 'input',
+      name: 'url_or_path',
+      message: 'You:',
+    },
+    ]);
+  } catch (error) {
+   console.error('Error getting user input!', cliMd(error));
+  }
   let pdf;
 
   try {
-    const url = new URL(url_or_path);
-    pdf = await fetch(url_or_path).then(response => response.arrayBuffer());
+    const url = new URL(prompt.url_or_path);
+    pdf = await fetch(prompt.url_or_path).then(response => response.arrayBuffer());
     console.log("PDF loaded!");
   } catch (_) {
-    pdf = fs.readFileSync(url_or_path);
+    pdf = fs.readFileSync(prompt.url_or_path);
     console.log("PDF loaded!");
   }
 

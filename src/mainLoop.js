@@ -1,4 +1,4 @@
-import { question } from 'readline-sync';
+import inquirer from 'inquirer';
 import { chatSession } from './app.js';
 import { saveChat } from './chats.js';
 import { pdf } from './pdf.js';
@@ -10,41 +10,57 @@ let not_saved_yet = [];
 async function mainLoop() {
 
   while (true) {
-    let userInput = question('You: ');
-    const formattedInput = userInput.trim();
-    let prompt = userInput;
-  
-    if (formattedInput === 'exit') {
-      console.log('Bye!');
-      break;
-    } else if (formattedInput === 'history') {
-      if (chat_log.length > 0) {
-        chat_log.forEach(log => {
-          console.log(log.role, log.content);
-        })
-      } else {
-        console.log("No history to show");
-      }
-      continue;
-    } else if (formattedInput === 'save') {
-      saveChat(not_saved_yet);
-      not_saved_yet = [];
-      continue;
-    } else if (formattedInput === 'loadpdf') {
-      const sumamry = await pdf();
-      console.log("log from after load!");
-      userInput = question('You: ');
-      prompt = sumamry + '\n' + userInput;
-    } else if (formattedInput === 'help') {
-      console.log(`
-        help     - Displays help
-        history  - Displays chat history
-        loadpdf  - Load a PDF and chat about it
-        unload   - Unload the PDF
-        save     - Saves chat in json format
+    let userInput;
+    try {
+      userInput = await inquirer.prompt([
+      {
+        type: 'input',
+        name: 'userInput',
+        message: 'You:',
+      },
+      ]);
+    } catch (error) {
+     console.error('Error getting user input!', cliMd(error));
+     break;
+    }
+
+    const formattedInput = userInput.userInput.trim();
+    let prompt = userInput.userInput;
+
+    switch (formattedInput) {
+      case 'exit':
+        console.log('Bye!');
+        break;
+    
+      case '-s':
+        saveChat(not_saved_yet);
+        not_saved_yet = [];
+        continue;
+    
+      case '-l':
+        const summary = await pdf();
+        console.log("log from after load!");
+        const nextInput = await inquirer.prompt([
+          {
+            type: 'input',
+            name: 'userInput',
+            message: 'You: ',
+          },
+        ]);
+        prompt = summary + '\n' + nextInput.userInput;
+        break;
+    
+      case '-h':
+        console.log(`
+        -h       - Displays help
+        -l       - Load a PDF and chat about it
+        -s       - Saves chat in json format
         exit     - Exits the application
-      `);
-      continue;
+        `);
+        continue;
+    
+      default:
+        break;
     }
     chat_log.push({role: 'user:', content: prompt});
     not_saved_yet.push({role: 'user:', content: prompt});

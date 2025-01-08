@@ -20,7 +20,7 @@
     "cli-spinners": "^3.2.0",
     "commander": "^12.1.0",
     "dotenv": "^16.4.7",
-    "punycode": "^2.3.1",
-    "readline-sync": "^1.4.10"
+    "inquirer": "^12.3.0",
+    "punycode": "^2.3.1"
   }
 }
