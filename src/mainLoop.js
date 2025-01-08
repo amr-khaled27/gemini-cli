@@ -14,6 +14,7 @@ async function mainLoop() {
     try {
       userInput = await inquirer.prompt([
       {
+        theme: {prefix: '$'},
         type: 'input',
         name: 'userInput',
         message: 'You:',
@@ -27,11 +28,12 @@ async function mainLoop() {
     const formattedInput = userInput.userInput.trim();
     let prompt = userInput.userInput;
 
+    if (formattedInput === 'exit') {
+      console.log('Bye!');
+      break;
+    }
+
     switch (formattedInput) {
-      case 'exit':
-        console.log('Bye!');
-        break;
-    
       case '-s':
         saveChat(not_saved_yet);
         not_saved_yet = [];
