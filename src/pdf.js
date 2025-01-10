@@ -1,6 +1,6 @@
 import fs from 'fs'
 import inquirer from 'inquirer';
-import { model } from './app.js';
+import { model } from '../bin/app.js';
 
 async function pdf() {
   let prompt;

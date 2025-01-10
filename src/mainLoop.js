@@ -1,5 +1,5 @@
 import inquirer from 'inquirer';
-import { chatSession } from './app.js';
+import { chatSession } from '../bin/app.js';
 import { saveChat } from './chats.js';
 import { pdf } from './pdf.js';
 import cliMd from 'cli-markdown';

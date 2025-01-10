@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 
 import { GoogleGenerativeAI } from '@google/generative-ai';
-import { mainLoop } from './mainLoop.js';
+import { mainLoop } from '../src/mainLoop.js';
 import { program } from 'commander';
 import dotenv from 'dotenv';
 import cliMd from 'cli-markdown';
