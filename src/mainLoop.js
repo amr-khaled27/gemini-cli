@@ -7,6 +7,16 @@ import cliMd from 'cli-markdown';
 let chat_log = [];
 let not_saved_yet = [];
 
+async function handleResponse(result, prompt) {
+  chat_log.push({role: 'user:', content: prompt});
+  not_saved_yet.push({role: 'user:', content: prompt});
+  
+  chat_log.push({role:'assistant:', content: `${result.response.text()}`});
+  not_saved_yet.push({role:'assistant:', content: `${result.response.text()}`});
+
+  console.log(cliMd(result.response.text()));
+}
+
 async function mainLoop() {
 
   while (true) {
@@ -14,10 +24,12 @@ async function mainLoop() {
     try {
       userInput = await inquirer.prompt([
       {
-        theme: {prefix: '$'},
+        theme: {
+          prefix: {done: '✔', idle: "◯"}
+        },
         type: 'input',
         name: 'userInput',
-        message: 'You:',
+        message: 'Prompt:',
       },
       ]);
     } catch (error) {
@@ -51,28 +63,24 @@ async function mainLoop() {
         ]);
         prompt = summary + '\n' + nextInput.userInput;
         break;
-    
+        
+      case 'help':
       case '-h':
         console.log(`
-        -h       - Displays help
-        -l       - Load a PDF and chat about it
-        -s       - Saves chat in json format
-        exit     - Exits the application
+  help | -h  - Displays help
+  -l         - Load a PDF and chat about it
+  -s         - Saves chat in json format
+  exit       - Exits the application
         `);
         continue;
     
       default:
         break;
     }
-    chat_log.push({role: 'user:', content: prompt});
-    not_saved_yet.push({role: 'user:', content: prompt});
 
     const result = await chatSession.sendMessage(prompt);
 
-    chat_log.push({role:'assistant:', content: `${result.response.text()}`});
-    not_saved_yet.push({role:'assistant:', content: `${result.response.text()}`});
-
-    console.log(cliMd(result.response.text()));
+    handleResponse(result, prompt);
   }
 }
 
