@@ -44,7 +44,7 @@ async function mainLoop() {
     To access the main menu, simply type \`menu\` or 'm'.
       `
       ));
-    } else if (formattedInput === 'menu') {
+    } else if (formattedInput === 'menu' || formattedInput === 'm') {
       const menu = await inquirer.prompt([{
         type: 'list',
         name: 'choice',
