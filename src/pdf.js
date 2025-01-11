@@ -9,7 +9,7 @@ async function pdf() {
     {
       type: 'input',
       name: 'url_or_path',
-      message: 'You:',
+      message: 'Enter url or path:',
     },
     ]);
   } catch (error) {
@@ -20,10 +20,8 @@ async function pdf() {
   try {
     const url = new URL(prompt.url_or_path);
     pdf = await fetch(prompt.url_or_path).then(response => response.arrayBuffer());
-    console.log("PDF loaded!");
   } catch (_) {
     pdf = fs.readFileSync(prompt.url_or_path);
-    console.log("PDF loaded!");
   }
 
   const summary = await model.generateContent([
