@@ -2,6 +2,22 @@ import fs from 'fs';
 import path from 'path';
 import { fileURLToPath } from 'url';
 import { dirname } from 'path';
+import { exec } from 'child_process';
+
+function openDirectory(path) {
+  const openDirectoryCommand = process.platform === 'win32'
+  ? `explorer "${path}"`
+  : process.platform === 'darwin'
+  ? `open "${path}"`
+  : `nemo "${path}"`;
+
+  exec(openDirectoryCommand, (err, stdout, stderr) => {
+    if (err) {
+      console.error('Error opening directory:', err);
+      return;
+    }
+  });
+}
 
 function saveChat(log) {
   const __filename = fileURLToPath(import.meta.url);
@@ -35,6 +51,7 @@ function saveChat(log) {
   }
   
   console.log('Chat log saved in:', filePath);
+  openDirectory(path.join(appDirectory, 'chats'));
 }
 
 export { saveChat };
