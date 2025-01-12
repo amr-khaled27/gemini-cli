@@ -10,6 +10,7 @@ node_modules/
 # Build directories
 build/
 dist/
+chats/
 
 # macOS system files
 .DS_Store

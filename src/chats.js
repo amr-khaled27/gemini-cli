@@ -9,7 +9,7 @@ function openDirectory(path) {
   ? `explorer "${path}"`
   : process.platform === 'darwin'
   ? `open "${path}"`
-  : `bruh "${path}"`;
+  : `nemo "${path}"`;
 
   exec(openDirectoryCommand, (err, stdout, stderr) => {
     if (err) {
