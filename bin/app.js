@@ -27,6 +27,7 @@ if (!apiKey) {
   **Windows (PowerShell):**
   > $env:GEMINI_API_KEY="your_api_key_here"
   `));
+  
   process.exit(1);
 }
 

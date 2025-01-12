@@ -1,8 +1,14 @@
 import fs from 'fs';
 import path from 'path';
+import { fileURLToPath } from 'url';
+import { dirname } from 'path';
 
 function saveChat(log) {
-  const dirPath = 'chats';
+  const __filename = fileURLToPath(import.meta.url);
+  const __dirname = dirname(__filename);
+  const appDirectory = path.resolve(__dirname, '..');
+  const dirPath = path.join(appDirectory, 'chats');
+
   const today = new Date();
   const f = Intl.DateTimeFormat('en-us', {
     dateStyle: 'full',
@@ -10,8 +16,6 @@ function saveChat(log) {
 
   const fileName = f.format(today) + '.json';
   const filePath = path.join(dirPath, fileName);
-
-  console.log(filePath);
 
   if (!fs.existsSync(dirPath)) {
     fs.mkdirSync(dirPath);
