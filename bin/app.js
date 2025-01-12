@@ -58,7 +58,9 @@ async function app() {
 program
   .version('0.2.0-alpha')
   .description('Chat with Gemini from the comfort of your terminal!')
+
   .option('-m, --message <prompt>', 'Send a prompt instantly to Gemini.')
+
   .option('<no options>', 'Enter chat mode with gemini.')
   .parse(process.argv);
 
@@ -72,6 +74,6 @@ if (opts.message) {
 
 export { model, chatSession };
 
-console.log("Welcome To Gemini Chat!");
+console.log(cliMd('Welcome To Gemini Chat!\n- To access the main menu, simply type `menu` or `m`.'));
 
 app();
