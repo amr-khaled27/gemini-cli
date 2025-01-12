@@ -9,12 +9,12 @@ function openDirectory(path) {
   ? `explorer "${path}"`
   : process.platform === 'darwin'
   ? `open "${path}"`
-  : `nemo "${path}"`;
+  : `bruh "${path}"`;
 
   exec(openDirectoryCommand, (err, stdout, stderr) => {
     if (err) {
-      console.error('Error opening directory:', err);
-      return;
+      console.error('Error opening directory:', err, '\ntrying thunar...');
+      exec(`thunar "${path}"`);
     }
   });
 }
