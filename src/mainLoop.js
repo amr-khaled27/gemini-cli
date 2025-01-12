@@ -49,10 +49,13 @@ async function mainLoop() {
         type: 'list',
         name: 'choice',
         message: 'Choose an option:',
-        choices: ['Save chat', 'Load PDF', 'Exit'],
+        choices: ['Continue chatting', 'Save chat', 'Load PDF', 'Exit'],
       }]);
   
       switch (menu.choice) {
+        case 'Continue chatting':
+          continue;
+
         case 'Save chat':
           saveChat(not_saved_yet);
           not_saved_yet = [];
