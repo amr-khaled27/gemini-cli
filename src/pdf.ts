@@ -1,6 +1,6 @@
 import fs from 'fs'
 import inquirer from 'inquirer';
-import { model } from '../bin/app';
+import { model } from '../bin/app.js';
 import cliMd from 'cli-markdown';
 
 async function pdf(): Promise<string> {
@@ -16,7 +16,7 @@ async function pdf(): Promise<string> {
   } catch (error) {
    console.error('Error getting user input!', cliMd(error));
   }
-  let pdf;
+  let pdf: Buffer | ArrayBuffer;
 
   try {
     const url = new URL(prompt!.url_or_path);
@@ -28,7 +28,7 @@ async function pdf(): Promise<string> {
   const summary = await model.generateContent([
     {
       inlineData: {
-        data: Buffer.from(pdf).toString("base64"),
+        data: Buffer.from(new Uint8Array(pdf)).toString("base64"),
         mimeType: "application/pdf",
       },
     },
@@ -38,4 +38,4 @@ async function pdf(): Promise<string> {
   return summary.response.text();
 }
 
-export { pdf };
+export default pdf;

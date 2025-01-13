@@ -1,12 +1,15 @@
 import inquirer from 'inquirer';
 import chalk from 'chalk';
 import cliMd from 'cli-markdown';
-import { chatSession } from '../bin/app';
-import { saveChat } from './chats';
-import { pdf } from './pdf';
+import { chatSession } from '../bin/app.js';
+import saveChat from './chats.js';
+import pdf from './pdf.js';
+import Loader from './loading.js';
 
-let not_saved_yet: any = [];
-let prompt: string;
+export interface LogItem {
+  role: string;
+  content: string;
+}
 
 type GenerateContentResult = {
   response: {
@@ -14,12 +17,17 @@ type GenerateContentResult = {
   };
 };
 
+let not_saved_yet: Array<LogItem> = [];
+let prompt: string;
+
 async function handleResponse(result: GenerateContentResult, prompt: string): Promise<void> {
   not_saved_yet.push({role: 'user:', content: prompt});
   not_saved_yet.push({role:'assistant:', content: `${result.response.text()}`});
 
   console.log(cliMd(result.response.text()));
 }
+
+const loader = new Loader('Awaiting API response ...');
 
 async function mainLoop(): Promise<void> {
 
@@ -37,9 +45,10 @@ async function mainLoop(): Promise<void> {
       },
       ]);
     } catch (error) {
-     console.error('Error getting user input!');
-     break;
+      console.error('Error getting user input!');
+      break;
     }
+    
 
     const formattedInput = userInput.userInput.toLowerCase().trim();
     prompt = userInput.userInput;
@@ -83,10 +92,18 @@ async function mainLoop(): Promise<void> {
             console.log('Bye!');
             process.exit(0);
             break;
+
+          default:
+            break;
       }
+    } else {
+      loader.startLoader();
     }
 
+
     const result = await chatSession.sendMessage(prompt);
+
+    loader.stopLoader();
 
     handleResponse(result, prompt);
   }

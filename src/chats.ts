@@ -3,6 +3,7 @@ import path from 'path';
 import { fileURLToPath } from 'url';
 import { dirname } from 'path';
 import { exec } from 'child_process';
+import { LogItem } from './mainLoop.js';
 
 function openDirectory(path: string): void {
   const openDirectoryCommand = process.platform === 'win32'
@@ -19,7 +20,7 @@ function openDirectory(path: string): void {
   });
 }
 
-function saveChat(log: Array<string>): void {
+export default function saveChat(log: Array<LogItem>): void {
   const __filename: string = fileURLToPath(import.meta.url);
   const __dirname: string = dirname(__filename);
   const appDirectory: string = path.resolve(__dirname, '..');
@@ -44,7 +45,8 @@ function saveChat(log: Array<string>): void {
     let file_log: Array<string> = [];
     const data = fs.readFileSync(filePath, 'utf8');
     file_log = JSON.parse(data);
-    file_log.push(...log);
+    const parsedLog: Array<LogItem> = JSON.parse(data);
+    parsedLog.push(...log);
 
     const updated_log = JSON.stringify(file_log);
     fs.writeFileSync(filePath, updated_log);
@@ -53,5 +55,3 @@ function saveChat(log: Array<string>): void {
   console.log('Chat log saved in:', filePath);
   openDirectory(path.join(appDirectory, 'chats'));
 }
-
-export { saveChat };
