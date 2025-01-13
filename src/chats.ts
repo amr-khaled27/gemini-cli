@@ -4,7 +4,7 @@ import { fileURLToPath } from 'url';
 import { dirname } from 'path';
 import { exec } from 'child_process';
 
-function openDirectory(path) {
+function openDirectory(path: string) {
   const openDirectoryCommand = process.platform === 'win32'
   ? `explorer "${path}"`
   : process.platform === 'darwin'
@@ -19,11 +19,11 @@ function openDirectory(path) {
   });
 }
 
-function saveChat(log) {
-  const __filename = fileURLToPath(import.meta.url);
-  const __dirname = dirname(__filename);
-  const appDirectory = path.resolve(__dirname, '..');
-  const dirPath = path.join(appDirectory, 'chats');
+function saveChat(log: Array<string>) {
+  const __filename: string = fileURLToPath(import.meta.url);
+  const __dirname: string = dirname(__filename);
+  const appDirectory: string = path.resolve(__dirname, '..');
+  const dirPath: string = path.join(appDirectory, 'chats');
 
   const today = new Date();
   const f = Intl.DateTimeFormat('en-us', {
@@ -41,7 +41,7 @@ function saveChat(log) {
     const jsonData = JSON.stringify(log);
     fs.writeFileSync(filePath, jsonData);
   } else {
-    let file_log = [];
+    let file_log: Array<string> = [];
     const data = fs.readFileSync(filePath, 'utf8');
     file_log = JSON.parse(data);
     file_log.push(...log);

@@ -1,21 +1,27 @@
 import inquirer from 'inquirer';
 import chalk from 'chalk';
 import cliMd from 'cli-markdown';
-import { chatSession } from '../bin/app.js';
-import { saveChat } from './chats.js';
-import { pdf } from './pdf.js';
+import { chatSession } from '../bin/app';
+import { saveChat } from './chats';
+import { pdf } from './pdf';
 
-let not_saved_yet = [];
-let prompt;
+let not_saved_yet: any = [];
+let prompt: string;
 
-async function handleResponse(result, prompt) {
+type GenerateContentResult = {
+  response: {
+    text: () => string; // Assuming text is a method that returns a string
+  };
+};
+
+async function handleResponse(result: GenerateContentResult, prompt: string): Promise<void> {
   not_saved_yet.push({role: 'user:', content: prompt});
   not_saved_yet.push({role:'assistant:', content: `${result.response.text()}`});
 
   console.log(cliMd(result.response.text()));
 }
 
-async function mainLoop() {
+async function mainLoop(): Promise<void> {
 
   while (true) {
     let userInput;
@@ -31,7 +37,7 @@ async function mainLoop() {
       },
       ]);
     } catch (error) {
-     console.error('Error getting user input!', cliMd(error));
+     console.error('Error getting user input!');
      break;
     }
 
@@ -62,7 +68,7 @@ async function mainLoop() {
           continue;
   
         case 'Load PDF':
-          const summary = await pdf();
+          const summary: string = await pdf();
           const nextInput = await inquirer.prompt([
             {
               type: 'input',

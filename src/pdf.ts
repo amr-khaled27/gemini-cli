@@ -1,8 +1,9 @@
 import fs from 'fs'
 import inquirer from 'inquirer';
-import { model } from '../bin/app.js';
+import { model } from '../bin/app';
+import cliMd from 'cli-markdown';
 
-async function pdf() {
+async function pdf(): Promise<string> {
   let prompt;
   try {
     prompt = await inquirer.prompt([
@@ -18,10 +19,10 @@ async function pdf() {
   let pdf;
 
   try {
-    const url = new URL(prompt.url_or_path);
-    pdf = await fetch(prompt.url_or_path).then(response => response.arrayBuffer());
+    const url = new URL(prompt!.url_or_path);
+    pdf = await fetch(prompt!.url_or_path).then(response => response.arrayBuffer());
   } catch (_) {
-    pdf = fs.readFileSync(prompt.url_or_path);
+    pdf = fs.readFileSync(prompt!.url_or_path);
   }
 
   const summary = await model.generateContent([

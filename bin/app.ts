@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 
-import { GoogleGenerativeAI } from '@google/generative-ai';
-import { mainLoop } from '../src/mainLoop.js';
+import { ChatSession, GenerativeModel, GoogleGenerativeAI } from '@google/generative-ai';
+import { mainLoop } from '../src/mainLoop';
 import { program } from 'commander';
 import dotenv from 'dotenv';
 import cliMd from 'cli-markdown';
@@ -31,9 +31,9 @@ if (!apiKey) {
   process.exit(1);
 }
 
-const genAI = new GoogleGenerativeAI(apiKey);
+const genAI: GoogleGenerativeAI = new GoogleGenerativeAI(apiKey);
 
-const model = genAI.getGenerativeModel({
+const model: GenerativeModel = genAI.getGenerativeModel({
   model: "gemini-2.0-flash-exp",
 });
 
@@ -45,14 +45,14 @@ const generationConfig = {
   responseMimeType: "text/plain",
 };
 
-const chatSession = model.startChat({
+const chatSession: ChatSession = model.startChat({
   generationConfig,
   history: [
 
   ],
 });
 
-async function app() {
+async function app(): Promise<void> {
   mainLoop();
 }
 
@@ -68,9 +68,11 @@ program
 const opts = program.opts();
 
 if (opts.message) {
-  const result = await chatSession.sendMessage(opts.message);
-  console.log(cliMd(result.response.text()));
-  process.exit(0);
+  (async () => {
+    const result = await chatSession.sendMessage(opts.message);
+    console.log(cliMd(result.response.text()));
+    process.exit(0);
+  })();
 }
 
 export { model, chatSession };
