@@ -4,7 +4,7 @@ import { fileURLToPath } from 'url';
 import { dirname } from 'path';
 import { exec } from 'child_process';
 
-function openDirectory(path: string) {
+function openDirectory(path: string): void {
   const openDirectoryCommand = process.platform === 'win32'
   ? `explorer "${path}"`
   : process.platform === 'darwin'
@@ -19,7 +19,7 @@ function openDirectory(path: string) {
   });
 }
 
-function saveChat(log: Array<string>) {
+function saveChat(log: Array<string>): void {
   const __filename: string = fileURLToPath(import.meta.url);
   const __dirname: string = dirname(__filename);
   const appDirectory: string = path.resolve(__dirname, '..');
