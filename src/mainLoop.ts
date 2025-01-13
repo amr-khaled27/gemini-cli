@@ -10,7 +10,7 @@ let prompt: string;
 
 type GenerateContentResult = {
   response: {
-    text: () => string; // Assuming text is a method that returns a string
+    text: () => string;
   };
 };
 
