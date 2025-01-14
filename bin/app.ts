@@ -56,27 +56,33 @@ async function app(): Promise<void> {
   mainLoop();
 }
 
-program
-  .version('0.2.0-alpha')
-  .description('Chat with Gemini from the comfort of your terminal!')
+function configureCommands(): void {
+  program
+    .version('0.2.0-alpha')
+    .description('Chat with Gemini from the comfort of your terminal!');
 
-  .option('-m, --message <prompt>', 'Send a prompt instantly to Gemini.')
+  program
+    .command('send')
+    .description('Send a prompt instantly to Gemini.')
+    .argument('<prompt...>', 'The prompt to send to Gemini.')
+    .action(async (prompts) => {
+      const prompt = prompts.join(' ');
+      const result = await chatSession.sendMessage(prompt);
+      console.log(cliMd(result.response.text()));
+      process.exit(0);
+    });
 
-  .option('<no options>', 'Enter chat mode with gemini.')
-  .parse(process.argv);
-
-const opts = program.opts();
-
-if (opts.message) {
-  (async () => {
-    const result = await chatSession.sendMessage(opts.message);
-    console.log(cliMd(result.response.text()));
-    process.exit(0);
-  })();
+  program
+    .command('chat')
+    .description('Enter chat mode with Gemini.')
+    .action(() => {
+      console.log(cliMd('Welcome To Gemini Chat!\n- To access the main menu, simply type `menu` or `m`.'));
+      app();
+    });
 }
 
+configureCommands();
+
+program.parse(process.argv);
+
 export { model, chatSession };
-
-console.log(cliMd('Welcome To Gemini Chat!\n- To access the main menu, simply type `menu` or `m`.'));
-
-app();
