@@ -7,7 +7,7 @@ export default class Loader {
 
   constructor(message: string) {
     this.message = message;
-    const { start, stop } = loading('Awaiting API response ...');
+    const { start, stop } = loading(this.message);
     this.start = start;
     this.stop = stop;
   }

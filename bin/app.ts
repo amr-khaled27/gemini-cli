@@ -3,6 +3,7 @@
 import { ChatSession, GenerativeModel, GoogleGenerativeAI } from '@google/generative-ai';
 import { mainLoop } from '../src/mainLoop.js';
 import { program } from 'commander';
+import Loader from '../src/loading.js';
 import dotenv from 'dotenv';
 import cliMd from 'cli-markdown';
 
@@ -66,8 +67,13 @@ function configureCommands(): void {
     .description('Send a prompt instantly to Gemini.')
     .argument('<prompt...>', 'The prompt to send to Gemini.')
     .action(async (prompts) => {
+      const sendLoader = new Loader('Sending prompt to Gemini...');
+      sendLoader.startLoader();
+
       const prompt = prompts.join(' ');
       const result = await chatSession.sendMessage(prompt);
+      
+      sendLoader.stopLoader();
       console.log(cliMd(result.response.text()));
       process.exit(0);
     });
