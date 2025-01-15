@@ -4,7 +4,7 @@ import cliMd from 'cli-markdown';
 import { chatSession } from '../bin/app.js';
 import saveChat from './chats.js';
 import pdf from './pdf.js';
-import Loader from './loading.js';
+import { loading } from 'cli-loading-animation';
 
 export interface LogItem {
   role: string;
@@ -19,19 +19,21 @@ type GenerateContentResult = {
 
 let not_saved_yet: Array<LogItem> = [];
 let prompt: string;
+const line = chalk.greenBright('─').repeat(process.stdout.columns);
 
 async function handleResponse(result: GenerateContentResult, prompt: string): Promise<void> {
   not_saved_yet.push({role: 'user:', content: prompt});
   not_saved_yet.push({role:'assistant:', content: `${result.response.text()}`});
-
+  
   console.log(cliMd(result.response.text()));
 }
 
-const loader = new Loader('Awaiting API response ...');
+const loader = loading('Awaiting API response ...');
 
 async function mainLoop(): Promise<void> {
-
+  
   while (true) {
+    console.log(line);
     let userInput;
     try {
       userInput = await inquirer.prompt([
@@ -48,11 +50,10 @@ async function mainLoop(): Promise<void> {
       console.error('Error getting user input!');
       break;
     }
-    
 
     const formattedInput = userInput.userInput.toLowerCase().trim();
     prompt = userInput.userInput;
-
+    
     if (formattedInput === '-h' || formattedInput === 'help') {
       console.log(cliMd(
       `
@@ -60,6 +61,7 @@ async function mainLoop(): Promise<void> {
       `
       ));
     } else if (formattedInput === 'menu' || formattedInput === 'm') {
+      console.log(line);
       const menu = await inquirer.prompt([{
         type: 'list',
         name: 'choice',
@@ -97,13 +99,14 @@ async function mainLoop(): Promise<void> {
             break;
       }
     } else {
-      loader.startLoader();
+      loader.start();
     }
 
+    console.log(line);
 
     const result = await chatSession.sendMessage(prompt);
 
-    loader.stopLoader();
+    loader.stop();
 
     handleResponse(result, prompt);
   }
