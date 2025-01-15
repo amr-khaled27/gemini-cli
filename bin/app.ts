@@ -81,7 +81,7 @@ function configureCommands(): void {
     .command('chat')
     .description('Enter chat mode with Gemini.')
     .action(() => {
-      const halfLine = '─'.repeat(process.stdout.columns / 2);
+      const halfLine = '─'.repeat(58);
       console.clear();
       centerLine(halfLine);
       centerLine('Welcome To Gemini Chat!');
