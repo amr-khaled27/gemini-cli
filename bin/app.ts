@@ -6,6 +6,7 @@ import { program } from 'commander';
 import dotenv from 'dotenv';
 import cliMd from 'cli-markdown';
 import centerLine from '../src/center.js';
+import { loading } from 'cli-loading-animation';
 
 dotenv.config();
 
@@ -67,8 +68,11 @@ function configureCommands(): void {
     .description('Send a prompt instantly to Gemini.')
     .argument('<prompt...>', 'The prompt to send to Gemini.')
     .action(async (prompts) => {
+      const { start, stop } = loading('Awaiting API response...');
       const prompt = prompts.join(' ');
+      start();
       const result = await chatSession.sendMessage(prompt);
+      stop();
       console.log(cliMd(result.response.text()));
       process.exit(0);
     });
