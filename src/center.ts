@@ -10,7 +10,14 @@ function centerLine(line: string) {
   const paddingLength = Math.max(0, Math.floor((terminalWidth - lineLength) / 2));
   const padding = ' '.repeat(paddingLength);
 
-  console.log(padding + chalk.green(line));
+  const useChalk: boolean = line.includes('─');
+
+  if (useChalk) {
+    console.log(padding + chalk.green(line));
+  } else {
+    console.log(padding + line);
+  }
+
 }
 
 export default centerLine;
