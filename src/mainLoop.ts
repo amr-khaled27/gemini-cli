@@ -5,6 +5,7 @@ import { chatSession } from '../bin/app.js';
 import saveChat from './chats.js';
 import pdf from './pdf.js';
 import { loading } from 'cli-loading-animation';
+import centerContent from './center.js';
 
 export interface LogItem {
   role: string;
@@ -19,7 +20,6 @@ type GenerateContentResult = {
 
 let not_saved_yet: Array<LogItem> = [];
 let prompt: string;
-const line = chalk.greenBright('─').repeat(process.stdout.columns);
 
 async function handleResponse(result: GenerateContentResult, prompt: string): Promise<void> {
   not_saved_yet.push({role: 'user:', content: prompt});
@@ -28,12 +28,11 @@ async function handleResponse(result: GenerateContentResult, prompt: string): Pr
   console.log(cliMd(result.response.text()));
 }
 
-const loader = loading('Awaiting API response ...');
+const loader = loading('Awaiting API response...');
 
 async function mainLoop(): Promise<void> {
   
   while (true) {
-    console.log(line);
     let userInput;
     try {
       userInput = await inquirer.prompt([
@@ -61,7 +60,6 @@ async function mainLoop(): Promise<void> {
       `
       ));
     } else if (formattedInput === 'menu' || formattedInput === 'm') {
-      console.log(line);
       const menu = await inquirer.prompt([{
         type: 'list',
         name: 'choice',
@@ -101,8 +99,6 @@ async function mainLoop(): Promise<void> {
     } else {
       loader.start();
     }
-
-    console.log(line);
 
     const result = await chatSession.sendMessage(prompt);
 
