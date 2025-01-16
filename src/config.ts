@@ -100,18 +100,17 @@ async function configMenu(): Promise<void> {
           break;
         
         case 'Back':
-          console.log('Back to main menu!');
+          console.log('Saving config...');
+          try {
+            writeFileSync(configPath, JSON.stringify(config, null, 2));
+          } catch (error) {
+            console.log('Error updating config:', error);
+          }
           return;
-        
-      default:
-        break;
-    }
-  }
-
-  try {
-    writeFileSync(configPath, JSON.stringify(config, null, 2));
-  } catch (error) {
-    console.log('Error updating config:', error);
+          
+          default:
+            break;
+          }
   }
 }
 

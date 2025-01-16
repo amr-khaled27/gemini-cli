@@ -28,6 +28,8 @@ export default function saveChat(log: Array<LogItem>): void {
   }
 
   const config: Config = JSON.parse(fs.readFileSync(configPath, 'utf-8'));
+
+  console.log(config.savePath);
   
   const dirPath: string = config.savePath;
 
