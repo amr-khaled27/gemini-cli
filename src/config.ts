@@ -2,8 +2,6 @@ import chalk from 'chalk';
 import { writeFileSync ,existsSync, readFileSync } from 'fs';
 import inquirer from 'inquirer';
 import { dirname, join } from 'path';
-import { menuHandler } from './mainLoop.js';
-import { log } from 'console';
 
 function getAppPath(): string {
   const appDirectory: string = dirname('.');
