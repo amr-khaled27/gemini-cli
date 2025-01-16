@@ -61,7 +61,7 @@ async function app(): Promise<void> {
 
 function configureCommands(): void {
   program
-    .version('0.2.0-alpha')
+    .version('0.3.0-alpha')
     .description('Chat with Gemini from the comfort of your terminal!');
 
   program
