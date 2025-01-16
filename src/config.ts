@@ -103,7 +103,6 @@ async function configMenu(): Promise<void> {
         
         case 'Back':
           console.log('Back to main menu!');
-          // await menuHandler();
           return;
         
       default:
