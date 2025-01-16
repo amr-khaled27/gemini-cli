@@ -7,6 +7,7 @@ import dotenv from 'dotenv';
 import cliMd from 'cli-markdown';
 import centerLine from '../src/center.js';
 import { loading } from 'cli-loading-animation';
+import { welcome } from '../src/consoleUtils.js';
 
 dotenv.config();
 
@@ -81,12 +82,8 @@ function configureCommands(): void {
     .command('chat')
     .description('Enter chat mode with Gemini.')
     .action(() => {
-      const halfLine = '─'.repeat(58);
       console.clear();
-      centerLine(halfLine);
-      centerLine('Welcome To Gemini Chat!');
-      centerLine('To access the main menu, simply type menu or m.');
-      centerLine(halfLine);
+      welcome();
       app();
     });
 }

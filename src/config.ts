@@ -2,6 +2,8 @@ import chalk from 'chalk';
 import { writeFileSync ,existsSync, readFileSync } from 'fs';
 import inquirer from 'inquirer';
 import { dirname, join } from 'path';
+import { menuHandler } from './mainLoop.js';
+import { log } from 'console';
 
 function getAppPath(): string {
   const appDirectory: string = dirname('.');
@@ -32,7 +34,7 @@ function createConfig(config: Config): void {
   }
 }
 
-async function mainMenu(): Promise<any> {
+async function mainMenu(): Promise<{ choice: string }> {
   const setting = await inquirer.prompt([
     {
       type: 'list',
@@ -55,10 +57,6 @@ async function configMenu(): Promise<void> {
   while (true) {
     const setting = await mainMenu();
 
-    if (setting.choice === 'Back') {
-      break;
-    }
-
     switch (setting.choice) {
       case 'Save path':
         const savePath = await inquirer.prompt([
@@ -69,7 +67,6 @@ async function configMenu(): Promise<void> {
             choices: ['Default', 'Custom']
           },
         ]);
-
         switch (savePath.type) {
           case 'Default':
             config.savePath = './';
@@ -90,8 +87,9 @@ async function configMenu(): Promise<void> {
             break;
         }
         break;
-  
+
         case 'Layout':
+          console.log('Layout!!!');
           const layout = await inquirer.prompt([
             {
               type: 'list',
@@ -102,7 +100,12 @@ async function configMenu(): Promise<void> {
           ]);
           config.layout = layout.type;
           break;
-    
+        
+        case 'Back':
+          console.log('Back to main menu!');
+          // await menuHandler();
+          return;
+        
       default:
         break;
     }
