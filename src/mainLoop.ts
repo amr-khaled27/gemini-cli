@@ -5,6 +5,7 @@ import { chatSession } from '../bin/app.js';
 import saveChat from './chats.js';
 import pdf from './pdf.js';
 import { loading } from 'cli-loading-animation';
+import { configMenu } from './config.js';
 
 export interface LogItem {
   role: string;
@@ -63,11 +64,15 @@ async function mainLoop(): Promise<void> {
         type: 'list',
         name: 'choice',
         message: 'Choose an option:',
-        choices: ['Continue chatting', 'Save chat', 'Load PDF', 'Exit'],
+        choices: ['Continue chatting','Settings' ,'Save chat', 'Load PDF', 'Exit'],
       }]);
   
       switch (menu.choice) {
         case 'Continue chatting':
+          continue;
+
+        case 'Settings':
+          await configMenu();
           continue;
 
         case 'Save chat':

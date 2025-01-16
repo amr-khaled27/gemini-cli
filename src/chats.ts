@@ -4,6 +4,7 @@ import { fileURLToPath } from 'url';
 import { dirname } from 'path';
 import { exec } from 'child_process';
 import { LogItem } from './mainLoop.js';
+import { configExists, configPath, Config } from './config.js';
 
 function openDirectory(path: string): void {
   const openDirectoryCommand = process.platform === 'win32'
@@ -21,10 +22,14 @@ function openDirectory(path: string): void {
 }
 
 export default function saveChat(log: Array<LogItem>): void {
-  const __filename: string = fileURLToPath(import.meta.url);
-  const __dirname: string = dirname(__filename);
-  const appDirectory: string = path.resolve(__dirname, '..');
-  const dirPath: string = path.join(appDirectory, 'chats');
+  if (!configExists()) {
+    console.log('Config file not found.\nRun the program with the --config flag to create one, or create oe using settings.');
+    return;
+  }
+
+  const config: Config = JSON.parse(fs.readFileSync(configPath, 'utf-8'));
+  
+  const dirPath: string = config.savePath;
 
   const today = new Date();
   const f = Intl.DateTimeFormat('en-us', {
@@ -53,5 +58,5 @@ export default function saveChat(log: Array<LogItem>): void {
   }
   
   console.log('Chat log saved in:', filePath);
-  openDirectory(path.join(appDirectory, 'chats'));
+  openDirectory(dirPath);
 }
