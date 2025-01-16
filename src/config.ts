@@ -106,6 +106,7 @@ async function configMenu(): Promise<void> {
           } catch (error) {
             console.log('Error updating config:', error);
           }
+          console.clear();
           return;
           
           default:

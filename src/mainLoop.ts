@@ -46,6 +46,7 @@ async function menuHandler(): Promise<Boolean> {
   
     switch (choice) {
       case 'Continue chatting':
+        console.clear();
         welcome();
         printHistory();
         exit = true;
