@@ -5,7 +5,6 @@ import { chatSession } from '../bin/app.js';
 import saveChat from './chats.js';
 import pdf from './pdf.js';
 import { loading } from 'cli-loading-animation';
-import centerContent from './center.js';
 
 export interface LogItem {
   role: string;

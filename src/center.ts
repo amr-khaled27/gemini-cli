@@ -1,6 +1,6 @@
 import chalk from "chalk";
 
-function centerLine(line: string) {
+function centerLine(line: string): void {
   const terminalWidth = process.stdout.columns;
   if (terminalWidth === undefined) {
     console.log(line)
@@ -17,7 +17,6 @@ function centerLine(line: string) {
   } else {
     console.log(padding + line);
   }
-
 }
 
 export default centerLine;
