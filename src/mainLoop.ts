@@ -101,7 +101,6 @@ async function menuHandler(): Promise<Boolean> {
         ]);
         prompt = summary + "\n" + nextInput.userInput;
         exit = true;
-        proceed = true;
         break;
 
       case "Exit":
