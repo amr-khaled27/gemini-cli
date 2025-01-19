@@ -2,9 +2,9 @@
   "name": "gemini-cli",
   "type": "module",
   "version": "0.3.0-alpha",
-  "main": "./bin/app.js",
+  "main": "./dist/bin/app.js",
   "bin": {
-    "gemini": "./bin/app.js"
+    "gemini": "./dist/bin/app.js"
   },
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
