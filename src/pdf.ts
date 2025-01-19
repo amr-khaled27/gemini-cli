@@ -1,29 +1,33 @@
-import fs from 'fs'
-import inquirer from 'inquirer';
-import { model } from '../bin/app.js';
-import cliMd from 'cli-markdown';
+import fs from "fs";
+import inquirer from "inquirer";
+import { model } from "../bin/app.js";
+import cliMd from "cli-markdown";
 
 async function pdf(): Promise<string> {
   let prompt;
   try {
     prompt = await inquirer.prompt([
-    {
-      type: 'input',
-      name: 'url_or_path',
-      message: 'Enter url or path:',
-    },
+      {
+        type: "input",
+        name: "url_or_path",
+        message: "Enter url or path:",
+      },
     ]);
   } catch (error) {
-   console.error('Error getting user input!', cliMd(error));
+    console.error("Error getting user input!", cliMd(error));
   }
   let pdf: Buffer | ArrayBuffer;
 
   try {
     const url = new URL(prompt!.url_or_path);
-    pdf = await fetch(prompt!.url_or_path).then(response => response.arrayBuffer());
+    pdf = await fetch(prompt!.url_or_path).then((response) =>
+      response.arrayBuffer()
+    );
   } catch (_) {
     pdf = fs.readFileSync(prompt!.url_or_path);
   }
+
+  console.log("Awaiting summary...");
 
   const summary = await model.generateContent([
     {
