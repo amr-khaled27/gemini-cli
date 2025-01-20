@@ -91,15 +91,6 @@ async function menuHandler(): Promise<Boolean> {
 
       case "Load PDF":
         await pdf();
-        // const nextInput = await inquirer.prompt([
-        //   {
-        //     ...customPromptTheme,
-        //     type: "input",
-        //     name: "userInput",
-        //     message: "You: ",
-        //   },
-        // ]);
-        // prompt = summary + "\n" + nextInput.userInput;
         exit = true;
         break;
 
