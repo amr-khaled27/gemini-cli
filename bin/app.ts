@@ -1,20 +1,25 @@
 #!/usr/bin/env node
 
-import { ChatSession, GenerativeModel, GoogleGenerativeAI } from '@google/generative-ai';
-import { mainLoop } from '../src/mainLoop.js';
-import { program } from 'commander';
-import dotenv from 'dotenv';
-import cliMd from 'cli-markdown';
-import centerLine from '../src/center.js';
-import { loading } from 'cli-loading-animation';
-import { welcome } from '../src/consoleUtils.js';
+import {
+  ChatSession,
+  GenerativeModel,
+  GoogleGenerativeAI,
+} from "@google/generative-ai";
+import { mainLoop } from "../src/mainLoop.js";
+import { program } from "commander";
+import dotenv from "dotenv";
+import cliMd from "cli-markdown";
+import centerLine from "../src/center.js";
+import { loading } from "cli-loading-animation";
+import { welcome } from "../src/consoleUtils.js";
 
 dotenv.config();
 
 const apiKey = process.env.GEMINI_API_KEY;
 
 if (!apiKey) {
-  console.error(cliMd(`
+  console.error(
+    cliMd(`
   **Please set GEMINI_API_KEY in your environment variables.**
   You can get your API key from
   > https://console.cloud.google.com/apis/credentials
@@ -29,8 +34,9 @@ if (!apiKey) {
 
   **Windows (PowerShell):**
   > $env:GEMINI_API_KEY="your_api_key_here"
-  `));
-  
+  `)
+  );
+
   process.exit(1);
 }
 
@@ -50,9 +56,7 @@ const generationConfig = {
 
 const chatSession: ChatSession = model.startChat({
   generationConfig,
-  history: [
-
-  ],
+  history: [],
 });
 
 async function app(): Promise<void> {
@@ -61,16 +65,16 @@ async function app(): Promise<void> {
 
 function configureCommands(): void {
   program
-    .version('0.3.0-alpha')
-    .description('Chat with Gemini from the comfort of your terminal!');
+    .version("0.3.5-alpha")
+    .description("Chat with Gemini from the comfort of your terminal!");
 
   program
-    .command('send')
-    .description('Send a prompt instantly to Gemini.')
-    .argument('<prompt...>', 'The prompt to send to Gemini.')
+    .command("send")
+    .description("Send a prompt instantly to Gemini.")
+    .argument("<prompt...>", "The prompt to send to Gemini.")
     .action(async (prompts) => {
-      const { start, stop } = loading('Awaiting API response...');
-      const prompt = prompts.join(' ');
+      const { start, stop } = loading("Awaiting API response...");
+      const prompt = prompts.join(" ");
       start();
       const result = await chatSession.sendMessage(prompt);
       stop();
@@ -79,8 +83,8 @@ function configureCommands(): void {
     });
 
   program
-    .command('chat')
-    .description('Enter chat mode with Gemini.')
+    .command("chat")
+    .description("Enter chat mode with Gemini.")
     .action(() => {
       console.clear();
       welcome();

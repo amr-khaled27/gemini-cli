@@ -116,23 +116,21 @@ async function menuHandler(): Promise<Boolean> {
 
 async function mainLoop(): Promise<void> {
   while (true) {
-    let userInput;
+    let input: { prompt: string };
     try {
-      userInput = await inquirer.prompt([
-        {
-          ...customPromptTheme,
-          type: "input",
-          name: "userInput",
-          message: "Prompt:",
-        },
-      ]);
+      input = await inquirer.prompt<{ prompt: string }>({
+        ...customPromptTheme,
+        type: "input",
+        name: "prompt",
+        message: "Prompt:",
+      });
     } catch (error) {
       console.error("Error getting user input!");
       break;
     }
 
-    const formattedInput = userInput.userInput.toLowerCase().trim();
-    prompt = userInput.userInput;
+    const formattedInput: string = input.prompt.toLowerCase().trim();
+    prompt = input.prompt;
 
     if (formattedInput === "-h" || formattedInput === "help") {
       console.log(
