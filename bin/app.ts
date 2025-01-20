@@ -9,7 +9,6 @@ import { mainLoop } from "../src/mainLoop.js";
 import { program } from "commander";
 import dotenv from "dotenv";
 import cliMd from "cli-markdown";
-import centerLine from "../src/center.js";
 import { loading } from "cli-loading-animation";
 import { welcome } from "../src/consoleUtils.js";
 
