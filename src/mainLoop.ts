@@ -53,7 +53,7 @@ async function handleResponse(
 
 async function menuHandler(): Promise<Boolean> {
   let exit: boolean = false;
-  let proceed: boolean = false;
+  let skip: boolean = false;
   while (!exit) {
     const { choice } = await inquirer.prompt([
       {
@@ -76,7 +76,7 @@ async function menuHandler(): Promise<Boolean> {
         welcome();
         printHistory();
         exit = true;
-        proceed = true;
+        skip = true;
         break;
 
       case "Settings":
@@ -86,11 +86,18 @@ async function menuHandler(): Promise<Boolean> {
       case "Save chat":
         saveChat(not_saved_yet);
         not_saved_yet = [];
-        proceed = true;
+        skip = true;
         break;
 
       case "Load PDF":
-        await pdf();
+        const summary = await pdf();
+        const input = await inquirer.prompt<{ prompt: string }>({
+          ...customPromptTheme,
+          type: "input",
+          name: "prompt",
+          message: "Prompt:",
+        });
+        prompt = summary + "\n" + input.prompt;
         exit = true;
         break;
 
@@ -102,7 +109,7 @@ async function menuHandler(): Promise<Boolean> {
         break;
     }
   }
-  return proceed;
+  return skip;
 }
 
 async function mainLoop(): Promise<void> {
@@ -133,8 +140,8 @@ async function mainLoop(): Promise<void> {
       );
     } else if (formattedInput === "menu" || formattedInput === "m") {
       console.clear();
-      const proceed: Boolean = await menuHandler();
-      if (proceed) {
+      const skip: Boolean = await menuHandler();
+      if (skip) {
         continue;
       }
     } else {

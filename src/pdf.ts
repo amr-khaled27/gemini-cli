@@ -12,7 +12,7 @@ if (!apiKey) {
 
 const fileManager = new GoogleAIFileManager(apiKey);
 
-async function pdf(): Promise<void> {
+async function pdf(): Promise<string> {
   let prompt;
   try {
     prompt = await inquirer.prompt([
@@ -39,10 +39,22 @@ async function pdf(): Promise<void> {
     pdf = fs.readFileSync(prompt!.url_or_path);
   }
 
-  await fileManager.uploadFile(prompt?.url_or_path, {
+  const uploadResult = await fileManager.uploadFile(prompt?.url_or_path, {
     mimeType: "application/pdf",
     displayName: "Content file",
   });
+
+  const result = await model.generateContent([
+    {
+      fileData: {
+        fileUri: uploadResult.file.uri,
+        mimeType: uploadResult.file.mimeType,
+      },
+    },
+    "Summarize this document in full details for future refrence",
+  ]);
+
+  return result.response.text();
 }
 
 export default pdf;
