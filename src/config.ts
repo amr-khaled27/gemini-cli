@@ -1,10 +1,14 @@
 import chalk from "chalk";
 import { writeFileSync, existsSync, readFileSync } from "fs";
 import inquirer from "inquirer";
-import { dirname, join } from "path";
+import path, { dirname, join } from "path";
+import { fileURLToPath } from "url";
 
-function getAppPath(): string {
-  const appDirectory: string = dirname(".");
+function getConfigPath(): string {
+  const __filename = fileURLToPath(import.meta.url);
+  const __dirname = dirname(__filename);
+  const appDirectory: string = path.resolve(__dirname, "../");
+  console.log(appDirectory);
   return appDirectory;
 }
 
@@ -12,7 +16,7 @@ export interface Config {
   savePath: string;
 }
 
-const configPath: string = join(getAppPath(), "config.json");
+const configPath: string = join(getConfigPath(), "config.json");
 
 function configExists(): boolean {
   if (existsSync(configPath)) {
@@ -27,7 +31,7 @@ function createConfig(config: Config): void {
   try {
     writeFileSync(configPath, json);
     console.log(
-      chalk.greenBright("✔") + " Created default config at " + getAppPath()
+      chalk.greenBright("✔") + " Created default config at " + getConfigPath()
     );
   } catch (error) {
     console.log("Error creating config file: ", error);
@@ -89,7 +93,6 @@ async function configMenu(): Promise<void> {
         break;
 
       case "Layout":
-        console.log("Layout!!!");
         const layout = await inquirer.prompt([
           {
             type: "list",
@@ -102,7 +105,6 @@ async function configMenu(): Promise<void> {
         break;
 
       case "Back":
-        console.log("Saving config...");
         try {
           writeFileSync(configPath, JSON.stringify(config, null, 2));
         } catch (error) {
