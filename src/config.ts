@@ -1,18 +1,18 @@
-import chalk from 'chalk';
-import { writeFileSync ,existsSync, readFileSync } from 'fs';
-import inquirer from 'inquirer';
-import { dirname, join } from 'path';
+import chalk from "chalk";
+import { writeFileSync, existsSync, readFileSync } from "fs";
+import inquirer from "inquirer";
+import { dirname, join } from "path";
 
 function getAppPath(): string {
-  const appDirectory: string = dirname('.');
+  const appDirectory: string = dirname(".");
   return appDirectory;
 }
 
 export interface Config {
-  savePath:string
+  savePath: string;
 }
 
-const configPath: string = join(getAppPath(), 'config.json');
+const configPath: string = join(getAppPath(), "config.json");
 
 function configExists(): boolean {
   if (existsSync(configPath)) {
@@ -26,19 +26,21 @@ function createConfig(config: Config): void {
   const json = JSON.stringify(config);
   try {
     writeFileSync(configPath, json);
-    console.log(chalk.greenBright('✔') + ' Created default config at ' + getAppPath());
+    console.log(
+      chalk.greenBright("✔") + " Created default config at " + getAppPath()
+    );
   } catch (error) {
-    console.log('Error creating config file: ', error);
+    console.log("Error creating config file: ", error);
   }
 }
 
 async function mainMenu(): Promise<{ choice: string }> {
   const setting = await inquirer.prompt([
     {
-      type: 'list',
-      name: 'choice',
-      message: 'Config Menu:',
-      choices: ['Save path', 'Layout', 'Back'],
+      type: "list",
+      name: "choice",
+      message: "Config Menu:",
+      choices: ["Save path", "Layout", "Back"],
     },
   ]);
 
@@ -47,36 +49,36 @@ async function mainMenu(): Promise<{ choice: string }> {
 
 async function configMenu(): Promise<void> {
   if (!configExists()) {
-    createConfig({ savePath: './' });
+    createConfig({ savePath: "./" });
   }
 
-  let config = JSON.parse(readFileSync(configPath, 'utf-8'));
+  let config = JSON.parse(readFileSync(configPath, "utf-8"));
 
   while (true) {
     const setting = await mainMenu();
 
     switch (setting.choice) {
-      case 'Save path':
+      case "Save path":
         const savePath = await inquirer.prompt([
           {
-            type: 'list',
-            name: 'type',
-            message: 'Choose save location',
-            choices: ['Default', 'Custom']
+            type: "list",
+            name: "type",
+            message: "Choose save location",
+            choices: ["Default", "Custom"],
           },
         ]);
         switch (savePath.type) {
-          case 'Default':
-            config.savePath = './';
+          case "Default":
+            config.savePath = "./";
             break;
 
-          case 'Custom':
+          case "Custom":
             const specified = await inquirer.prompt([
               {
-                type: 'input',
-                name: 'path',
-                message: 'Enter path'
-              }
+                type: "input",
+                name: "path",
+                message: "Enter path",
+              },
             ]);
             config.savePath = specified.path;
             break;
@@ -86,32 +88,32 @@ async function configMenu(): Promise<void> {
         }
         break;
 
-        case 'Layout':
-          console.log('Layout!!!');
-          const layout = await inquirer.prompt([
-            {
-              type: 'list',
-              name: 'type',
-              message: 'Choose layout type',
-              choices: ['Default']
-            },
-          ]);
-          config.layout = layout.type;
-          break;
-        
-        case 'Back':
-          console.log('Saving config...');
-          try {
-            writeFileSync(configPath, JSON.stringify(config, null, 2));
-          } catch (error) {
-            console.log('Error updating config:', error);
-          }
-          console.clear();
-          return;
-          
-          default:
-            break;
-          }
+      case "Layout":
+        console.log("Layout!!!");
+        const layout = await inquirer.prompt([
+          {
+            type: "list",
+            name: "type",
+            message: "Choose layout type",
+            choices: ["Default"],
+          },
+        ]);
+        config.layout = layout.type;
+        break;
+
+      case "Back":
+        console.log("Saving config...");
+        try {
+          writeFileSync(configPath, JSON.stringify(config, null, 2));
+        } catch (error) {
+          console.log("Error updating config:", error);
+        }
+        console.clear();
+        return;
+
+      default:
+        break;
+    }
   }
 }
 
