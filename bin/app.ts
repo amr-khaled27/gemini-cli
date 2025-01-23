@@ -11,6 +11,8 @@ import dotenv from "dotenv";
 import cliMd from "cli-markdown";
 import { loading } from "cli-loading-animation";
 import { welcome } from "../src/consoleUtils.js";
+import { configExists, createConfig } from "../src/config.js";
+import { create } from "domain";
 
 dotenv.config();
 
@@ -88,6 +90,20 @@ function configureCommands(): void {
       console.clear();
       welcome();
       app();
+    });
+
+  program
+    .command("--config")
+    .description("Create a config file.")
+    .action(() => {
+      if (configExists()) {
+        console.log("Config file already exists.");
+        return;
+      } else {
+        createConfig({ savePath: "./", layout: "Default" });
+        console.log("Default config file created successfully.");
+        return;
+      }
     });
 }
 

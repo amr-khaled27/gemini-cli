@@ -1,3 +1,4 @@
+import { loading } from "cli-loading-animation";
 import chalk from "chalk";
 import { writeFileSync, existsSync, readFileSync } from "fs";
 import inquirer from "inquirer";
@@ -14,6 +15,7 @@ function getConfigPath(): string {
 
 export interface Config {
   savePath: string;
+  layout: string;
 }
 
 const configPath: string = join(getConfigPath(), "config.json");
@@ -53,7 +55,7 @@ async function mainMenu(): Promise<{ choice: string }> {
 
 async function configMenu(): Promise<void> {
   if (!configExists()) {
-    createConfig({ savePath: "./" });
+    createConfig({ savePath: "./", layout: "Default" });
   }
 
   let config = JSON.parse(readFileSync(configPath, "utf-8"));
@@ -119,4 +121,4 @@ async function configMenu(): Promise<void> {
   }
 }
 
-export { configMenu, configExists, configPath };
+export { configMenu, configExists, configPath, createConfig };
