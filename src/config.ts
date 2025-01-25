@@ -9,7 +9,6 @@ function getConfigPath(): string {
   const __filename = fileURLToPath(import.meta.url);
   const __dirname = dirname(__filename);
   const appDirectory: string = path.resolve(__dirname, "../");
-  console.log(appDirectory);
   return appDirectory;
 }
 
