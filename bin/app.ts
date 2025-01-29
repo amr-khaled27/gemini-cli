@@ -11,8 +11,7 @@ import dotenv from "dotenv";
 import cliMd from "cli-markdown";
 import { loading } from "cli-loading-animation";
 import { welcome } from "../src/consoleUtils.js";
-import { configExists, createConfig } from "../src/config.js";
-import { create } from "domain";
+import { configExists, createConfig, readConfig } from "../src/config.js";
 
 dotenv.config();
 
@@ -41,10 +40,13 @@ if (!apiKey) {
   process.exit(1);
 }
 
+let systemInstructions = configExists() ? readConfig().systemInstructions : "";
+
 const genAI: GoogleGenerativeAI = new GoogleGenerativeAI(apiKey);
 
 const model: GenerativeModel = genAI.getGenerativeModel({
   model: "gemini-2.0-flash-exp",
+  systemInstruction: systemInstructions,
 });
 
 const generationConfig = {
@@ -93,14 +95,18 @@ function configureCommands(): void {
     });
 
   program
-    .command("--config")
+    .command("config")
     .description("Create a config file.")
     .action(() => {
       if (configExists()) {
         console.log("Config file already exists.");
         return;
       } else {
-        createConfig({ savePath: "./", layout: "Default" });
+        createConfig({
+          savePath: "./",
+          layout: "Default",
+          systemInstructions: "",
+        });
         console.log("Default config file created successfully.");
         return;
       }

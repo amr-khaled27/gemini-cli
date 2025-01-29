@@ -15,6 +15,7 @@ function getConfigPath(): string {
 export interface Config {
   savePath: string;
   layout: string;
+  systemInstructions: string;
 }
 
 const configPath: string = join(getConfigPath(), "config.json");
@@ -27,10 +28,19 @@ function configExists(): boolean {
   }
 }
 
+function readConfig(): Config {
+  if (!configExists()) {
+    throw new Error("Config file does not exist.");
+  }
+
+  const config = JSON.parse(readFileSync(configPath, "utf-8"));
+  return config;
+}
+
 function createConfig(config: Config): void {
   const json = JSON.stringify(config);
   try {
-    writeFileSync(configPath, json);
+    writeFileSync(configPath, json, { encoding: "utf-8", flag: "w" });
     console.log(
       chalk.greenBright("✔") + " Created default config at " + getConfigPath()
     );
@@ -45,7 +55,7 @@ async function mainMenu(): Promise<{ choice: string }> {
       type: "list",
       name: "choice",
       message: "Config Menu:",
-      choices: ["Save path", "Layout", "Back"],
+      choices: ["Save path", "Layout", "AI Instructions", "Back"],
     },
   ]);
 
@@ -54,7 +64,7 @@ async function mainMenu(): Promise<{ choice: string }> {
 
 async function configMenu(): Promise<void> {
   if (!configExists()) {
-    createConfig({ savePath: "./", layout: "Default" });
+    createConfig({ savePath: "./", layout: "Default", systemInstructions: "" });
   }
 
   let config = JSON.parse(readFileSync(configPath, "utf-8"));
@@ -86,6 +96,7 @@ async function configMenu(): Promise<void> {
               },
             ]);
             config.savePath = specified.path;
+            createConfig(config);
             break;
 
           default:
@@ -103,14 +114,24 @@ async function configMenu(): Promise<void> {
           },
         ]);
         config.layout = layout.type;
+        createConfig(config);
         break;
 
+      case "AI Instructions":
+        const instructions = await inquirer.prompt([
+          {
+            type: "input",
+            name: "instructions",
+            message:
+              "Enter AI Personality, the role you want it to play! **Note** changing the personality requires a restart of the app.",
+          },
+        ]);
+        config.systemInstructions = instructions.instructions;
+        createConfig(config);
+        process.exit(0);
+
       case "Back":
-        try {
-          writeFileSync(configPath, JSON.stringify(config, null, 2));
-        } catch (error) {
-          console.log("Error updating config:", error);
-        }
+        createConfig(config);
         console.clear();
         return;
 
@@ -120,4 +141,4 @@ async function configMenu(): Promise<void> {
   }
 }
 
-export { configMenu, configExists, configPath, createConfig };
+export { configMenu, configExists, configPath, createConfig, readConfig };
