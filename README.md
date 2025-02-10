@@ -35,7 +35,9 @@ npm install
 
 3. Compile TypeScript
 
+```bash
 tsc
+```
 
 4. Install the CLI Tool Globally
 
