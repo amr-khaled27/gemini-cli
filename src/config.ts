@@ -1,4 +1,3 @@
-import { loading } from "cli-loading-animation";
 import chalk from "chalk";
 import { writeFileSync, existsSync, readFileSync } from "fs";
 import inquirer from "inquirer";
